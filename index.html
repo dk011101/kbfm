@@ -728,6 +728,7 @@ h1 {
 
 /* 결과 이미지 저장 */
 .actions .wide { grid-column: 1 / -1; }
+.actions .solo { grid-column: 1 / -1; }
 .shot-wrap {
   position: fixed;
   inset: 0;
@@ -875,9 +876,10 @@ h1 {
     <div class="bar"><span class="bar-title" id="shot-title">♡ SAVE.PNG</span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
     <div class="win-body">
       <div class="shot-img"><img id="shot-img" alt="내 필모 순위 이미지"></div>
-      <p class="shot-hint">저장 버튼이 안 되면 이미지를 길게 누르거나(휴대폰) 오른쪽 클릭해서(PC) 저장해 주세요.</p>
+      <p class="shot-hint" id="shot-hint">저장 버튼이 안 되면 이미지를 길게 누르거나(휴대폰) 오른쪽 클릭해서(PC) 저장해 주세요.</p>
       <div class="actions">
-        <button type="button" class="btn primary" id="shot-save">이미지 저장</button>
+        <button type="button" class="btn primary wide" id="shot-save">이미지 저장</button>
+        <button type="button" class="btn" id="shot-share" hidden>공유하기</button>
         <button type="button" class="btn" id="shot-close">닫기</button>
       </div>
     </div>
@@ -1020,7 +1022,7 @@ const PHOTOS = {
     confirm: $('confirm'), restartYes: $('restart-yes'), restartNo: $('restart-no'),
     result: $('result'), sum: $('sum'), rank: $('rank'), skipped: $('skipped'), copy: $('copy'), again: $('again'),
     plain: $('plain'), plainText: $('plain-text'), footer: $('footer'), toast: $('toast'),
-    shot: $('shot'), shotImg: $('shot-img'), shotMake: $('shot-make'), shotSave: $('shot-save'), shotClose: $('shot-close'),
+    shot: $('shot'), shotImg: $('shot-img'), shotMake: $('shot-make'), shotSave: $('shot-save'), shotClose: $('shot-close'), shotShare: $('shot-share'), shotHint: $('shot-hint'),
   };
 
   const items = ITEMS.map(parseItem);
@@ -1518,7 +1520,13 @@ const PHOTOS = {
       shot.blob = blob;
       shot.url = URL.createObjectURL(blob);
       shot.name = (TITLE.replace(/\s+/g, '_') || 'filmo_sort') + '_결과.png';
-      el.shotImg.src = shot.url;
+      el.shotImg.src = await new Promise((res) => {
+        const fr = new FileReader();
+        fr.onload = () => res(fr.result);
+        fr.onerror = () => res(shot.url);
+        fr.readAsDataURL(blob);
+      });
+      setupShotButtons();
       el.shot.hidden = false;
       el.shotSave.focus();
     } catch (e) {
@@ -1528,6 +1536,28 @@ const PHOTOS = {
       el.shotMake.textContent = '이미지로 저장';
     }
   });
+  // 기기별 저장 방식: 아이폰은 공유 시트(사진에 저장), 안드로이드와 PC는 바로 다운로드
+  const UA = navigator.userAgent || '';
+  const IS_IOS = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const IN_APP = /KAKAOTALK|Instagram|FBAN|FBAV|Line\/|NAVER\(inapp|DaumApps|everytimeApp|; wv\)/i.test(UA);
+  function shotFile() { return new File([shot.blob], shot.name, { type: 'image/png' }); }
+  function canShareFile() {
+    try { return !!(navigator.canShare && navigator.canShare({ files: [shotFile()] })); } catch (e) { return false; }
+  }
+  function setupShotButtons() {
+    const share = !dl && !IS_IOS && canShareFile();
+    el.shotShare.hidden = !share;
+    el.shotClose.classList.toggle('solo', !share);
+    if (dl) el.shotHint.textContent = '저장 버튼을 누르고 확인 창에서 저장을 골라 주세요.';
+    else if (IN_APP) el.shotHint.textContent = '앱 안의 브라우저에서는 저장이 막혀 있을 수 있어요. 오른쪽 위 메뉴에서 "다른 브라우저로 열기"를 누르거나, 이미지를 길게 눌러 저장해 주세요.';
+    else if (IS_IOS) el.shotHint.textContent = '저장 버튼을 누르고 "이미지 저장"을 고르면 사진 앱에 저장돼요. 이미지를 길게 눌러도 돼요.';
+    else el.shotHint.textContent = '저장한 이미지는 다운로드 폴더(갤러리의 Download 앨범)에 들어가요. 안 되면 이미지를 길게 누르거나 오른쪽 클릭해서 저장해 주세요.';
+  }
+  function downloadShot() {
+    const a = document.createElement('a');
+    a.href = shot.url; a.download = shot.name; a.rel = 'noopener';
+    document.body.append(a); a.click(); a.remove();
+  }
   el.shotSave.addEventListener('click', async () => {
     if (!shot.blob) return;
     if (dl) {
@@ -1539,18 +1569,17 @@ const PHOTOS = {
         if (e && e.code === 'declined') return;
       }
     }
-    try {
-      const file = new File([shot.blob], shot.name, { type: 'image/png' });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file] });
-        return;
-      }
-    } catch (e) {
-      if (e && e.name === 'AbortError') return;
+    if (IS_IOS && canShareFile()) {
+      try { await navigator.share({ files: [shotFile()] }); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
     }
-    const a = document.createElement('a');
-    a.href = shot.url; a.download = shot.name;
-    document.body.append(a); a.click(); a.remove();
+    downloadShot();
+    if (!IS_IOS) toast('이미지를 내려받았어요');
+  });
+  el.shotShare.addEventListener('click', async () => {
+    if (!shot.blob) return;
+    try { await navigator.share({ files: [shotFile()] }); }
+    catch (e) { if (!(e && e.name === 'AbortError')) toast('공유하지 못했어요. 이미지 저장을 눌러 주세요'); }
   });
   el.shotClose.addEventListener('click', closeShot);
   el.shot.addEventListener('click', (e) => { if (e.target === el.shot) closeShot(); });
