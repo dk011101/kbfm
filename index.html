@@ -17,7 +17,7 @@
 //  · 색과 글꼴은 아래 <style>의 :root 부분에서 바꿀 수 있어요.
 // ══════════════════════════════════════════════════════════
 const TITLE  = "홍기범 필모그래피 소트";
-const FOOTER = "기범이 열심히 살았어";
+const FOOTER = "기범이 열심히 살았어...";
 const ITEMS  = [
   "프리츠/안나차이코프스키",
   "저스틴 챕먼/일라이",
@@ -753,6 +753,86 @@ h1 {
 /* 만든 사람 */
 .credit { margin: -8px 0 0; text-align: center; font: 500 11px/1.4 var(--font-sans); letter-spacing: 0; color: #9aa9c0; }
 
+/* ── 결과 화면: 1~3위 시상대 + 작은 칸 ── */
+.podium { display: flex; justify-content: center; align-items: flex-end; flex-wrap: wrap; gap: 34px 10px; margin-top: 22px; }
+.pod {
+  position: relative;
+  width: calc((100% - 20px) / 3);
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 6px 6px 10px;
+  background: #fff;
+  border: 2.5px solid #d998b6;
+  border-radius: 16px;
+  box-shadow: 3px 4px 0 #f3c6dc;
+  text-align: center;
+  animation: pod-in .5s cubic-bezier(.2, .9, .3, 1.25) both;
+  animation-delay: var(--d, 0ms);
+}
+.podium.is-podium { flex-wrap: nowrap; }
+.podium.is-podium .pod { width: calc((100% - 20px) * .31); }
+.podium.is-podium .pod.first { width: calc((100% - 20px) * .38); background: #fff7fb; border-width: 3px; }
+.podium[data-count="1"] .pod { width: 46%; }
+.podium[data-count="2"] .pod { width: calc((100% - 10px) / 2); max-width: 46%; }
+.pod .photo { width: 100%; aspect-ratio: 5 / 6; border: 1.5px solid #b7cee7; border-radius: 11px; margin-bottom: 6px; }
+.pod b { font: 800 clamp(13.5px, 3.9vw, 17px)/1.3 var(--font-sans); letter-spacing: -.035em; color: #577da5; word-break: keep-all; overflow-wrap: anywhere; }
+.pod.first b { font-size: clamp(15px, 4.4vw, 19px); }
+.pod small, .tile small {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 2px 4px;
+  font: 500 11px/1.35 var(--font-sans); color: #8e9db4; word-break: keep-all; overflow-wrap: anywhere;
+}
+.pod .crown { position: absolute; top: -27px; left: 50%; width: 40px; transform: translateX(-50%) rotate(-6deg); }
+.pod .crown svg { display: block; width: 100%; height: auto; }
+.photo .badge {
+  position: absolute; top: 6px; left: 6px;
+  min-width: 26px; height: 26px; padding: 0 5px;
+  display: grid; place-items: center;
+  font: 600 14px/1 var(--font-pixel); color: #7895b5;
+  background: #fff; border: 1.5px solid #c5a4c6; border-radius: 8px;
+}
+.pod .photo .badge { min-width: 30px; height: 30px; font-size: 16px; }
+.pod.first .photo .badge { min-width: 34px; height: 34px; font-size: 18px; }
+.pod.r1 .badge { background: #ffe1ea; }
+.pod.r2 .badge { background: #fff0c7; }
+.pod.r3 .badge { background: #dbf4ed; }
+.tiles { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+@media (min-width: 520px) { .tiles { grid-template-columns: repeat(5, 1fr); } }
+.tile {
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  padding: 4px 4px 7px;
+  background: #fff; border: 1.5px solid #b9cee7; border-radius: 12px;
+  box-shadow: 2px 3px 0 #e6ddf3;
+  text-align: center; min-width: 0;
+}
+.tile .photo { width: 100%; aspect-ratio: 5 / 6; border: 1px solid #b7cee7; border-radius: 8px; margin-bottom: 4px; }
+.tile .photo .badge { top: 4px; left: 4px; min-width: 21px; height: 21px; font-size: 11.5px; border-radius: 6px; padding: 0 3px; }
+.tile b { font: 700 11.5px/1.3 var(--font-sans); letter-spacing: -.04em; color: #587da4; word-break: keep-all; overflow-wrap: anywhere; }
+.tile small { font-size: 9.5px; letter-spacing: -.03em; }
+.tile small .year, .pod small .year { font-size: 9px; padding: 2px 4px; }
+@keyframes pod-in { from { transform: translateY(14px) scale(.96); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .pod { animation: none; } }
+
+/* 4위부터: 이름만 두 줄 목록 */
+.tiles {
+  display: block; columns: 2; column-gap: 18px;
+  margin: 18px 0 0; padding: 8px 14px;
+  background: #f8f6ff; border: 1.5px solid #e4dcf3; border-radius: 14px;
+}
+.tiles.one-col { columns: 1; }
+.line {
+  break-inside: avoid;
+  display: grid; grid-template-columns: 26px 1fr; align-items: center; gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1.5px dashed #d8d7e7;
+}
+.line .no { font: 600 14px/1 var(--font-pixel); color: #7895b5; text-align: center; font-variant-numeric: tabular-nums; }
+.line .name { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.line b { font: 700 13.5px/1.3 var(--font-sans); letter-spacing: -.035em; color: #577da5; word-break: keep-all; overflow-wrap: anywhere; }
+.line small {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 2px 4px;
+  font: 500 11px/1.35 var(--font-sans); color: #8e9db4; word-break: keep-all; overflow-wrap: anywhere;
+}
+.line small .year { font-size: 9px; padding: 2px 4px; }
+
 </style>
 </head>
 
@@ -848,7 +928,8 @@ h1 {
         <div class="eyebrow">★ &nbsp; MY FAVORITE ROLES &nbsp; ★</div>
         <h2>내 필모 순위</h2>
         <p class="sum" id="sum"></p>
-        <ol class="rank" id="rank"></ol>
+        <div class="podium" id="podium"></div>
+        <ol class="tiles" id="tiles"></ol>
         <p class="skipped" id="skipped" hidden></p>
       </div>
     </div>
@@ -867,7 +948,7 @@ h1 {
 
   <footer class="win foot t-lilac">
     <div class="bar"><span class="bar-title">MEMO.TXT</span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
-    <div class="win-body" id="footer">기범이 열심히 살았어</div>
+    <div class="win-body" id="footer">기범이 열심히 살았어...</div>
   </footer>
   <p class="credit">@bottomofmaS2</p>
 </main>
@@ -1020,7 +1101,7 @@ const PHOTOS = {
     arena: $('arena'), left: $('left'), right: $('right'), both: $('both'), dunno: $('dunno'),
     undo: $('undo'), restart: $('restart'), undoRow: $('undo-row'),
     confirm: $('confirm'), restartYes: $('restart-yes'), restartNo: $('restart-no'),
-    result: $('result'), sum: $('sum'), rank: $('rank'), skipped: $('skipped'), copy: $('copy'), again: $('again'),
+    result: $('result'), sum: $('sum'), podium: $('podium'), tiles: $('tiles'), skipped: $('skipped'), copy: $('copy'), again: $('again'),
     plain: $('plain'), plainText: $('plain-text'), footer: $('footer'), toast: $('toast'),
     shot: $('shot'), shotImg: $('shot-img'), shotMake: $('shot-make'), shotSave: $('shot-save'), shotClose: $('shot-close'), shotShare: $('shot-share'), shotHint: $('shot-hint'),
   };
@@ -1039,7 +1120,7 @@ const PHOTOS = {
 
   document.title = TITLE;
   el.title.textContent = TITLE;
-  el.footer.textContent = FOOTER + ' ♡';
+  el.footer.textContent = FOOTER;
 
   /* 저장 */
   function save() {
@@ -1176,26 +1257,62 @@ const PHOTOS = {
   }
 
   /* 3. 결과 */
+  const CROWN = '<svg viewBox="0 0 52 38" aria-hidden="true"><path d="M6 33 3 9l13 11L26 4l10 16 13-11-3 24Z" fill="#ffe48a" stroke="#c99ab6" stroke-width="3" stroke-linejoin="round"/><circle cx="3" cy="9" r="3.6" fill="#ffb3cf" stroke="#c99ab6" stroke-width="2"/><circle cx="26" cy="4" r="3.6" fill="#ffb3cf" stroke="#c99ab6" stroke-width="2"/><circle cx="49" cy="9" r="3.6" fill="#ffb3cf" stroke="#c99ab6" stroke-width="2"/></svg>';
+  function rankCard(tag, cls, rank, item) {
+    const card = document.createElement(tag);
+    card.className = cls;
+    const ph = photoEl(item);
+    ph.append(span('badge', rank));
+    const b = document.createElement('b');
+    b.textContent = item.role;
+    card.append(ph, b);
+    if (item.work || item.year) card.append(workLine(item, 'small'));
+    return card;
+  }
   function renderResult() {
-    const rows = rankRows(state);
-    el.rank.textContent = '';
-    for (const r of rows) {
-      const item = items[pool[r.index]];
+    const rows = rankRows(state).map((r) => ({ rank: r.rank, item: items[pool[r.index]] }));
+    // 1~3위: 큰 카드 (1·2·3위가 하나씩이면 2-1-3 시상대)
+    let top = rows.filter((r) => r.rank <= 3);
+    if (top.length > 5) top = top.slice(0, 5);
+    if (!top.length) top = rows.slice(0, Math.min(3, rows.length));
+    const rest = rows.slice(top.length);
+    const podium = top.length === 3 && top[0].rank === 1 && top[1].rank === 2 && top[2].rank === 3;
+    el.podium.textContent = '';
+    el.podium.classList.toggle('is-podium', podium);
+    el.podium.dataset.count = top.length;
+    top.forEach((r, i) => {
+      const card = rankCard('div', 'pod r' + Math.min(r.rank, 3), r.rank, r.item);
+      if (podium) card.style.order = [2, 1, 3][i];
+      if (r.rank === 1) {
+        card.classList.add('first');
+        const c = span('crown');
+        c.innerHTML = CROWN;
+        card.prepend(c);
+      }
+      card.style.setProperty('--d', (podium ? [2, 0, 1][i] : i) * 90 + 'ms');
+      el.podium.append(card);
+    });
+    // 4위부터: 작은 칸
+    el.tiles.textContent = '';
+    el.tiles.hidden = rest.length === 0;
+    rest.forEach((r) => {
       const li = document.createElement('li');
-      if (r.rank <= 3) li.classList.add('r' + r.rank);
+      li.className = 'line';
       const name = span('name');
       const b = document.createElement('b');
-      b.textContent = item.role;
+      b.textContent = r.item.role;
       name.append(b);
-      if (item.work || item.year) name.append(workLine(item, 'small'));
-      li.append(span('no', r.rank), photoEl(item), name);
-      el.rank.append(li);
-    }
+      if (r.item.work || r.item.year) name.append(workLine(r.item, 'small'));
+      li.append(span('no', r.rank), name);
+      el.tiles.append(li);
+    });
+    el.tiles.classList.toggle('one-col', rest.length <= 4);
+
     el.sum.textContent = `${answers.length}번의 선택으로 완성했어요.`;
     const skipped = items.filter((_, i) => !pool.includes(i));
     el.skipped.hidden = skipped.length === 0;
     el.skipped.textContent = skipped.length ? `안 봐서 뺀 역할 ${skipped.length}개: ` + skipped.map((it) => it.raw).join(', ') : '';
-    resultText = TITLE + '\n' + rows.map((r) => `${r.rank}. ${items[pool[r.index]].raw}`).join('\n');
+    resultText = TITLE + '\n' + rows.map((r) => `${r.rank}. ${r.item.raw}`).join('\n');
     el.plain.hidden = true;
     el.plainText.value = resultText;
     show('result');
@@ -1310,14 +1427,14 @@ const PHOTOS = {
     }
     return sz;
   }
-  function drawCover(ctx, im, x, y, w, h, r) {
+  function drawCover(ctx, im, x, y, w, h, r, ay = 0.5) {
     ctx.save();
     rr(ctx, x, y, w, h, r);
     ctx.clip();
     if (im) {
       const s = Math.max(w / im.naturalWidth, h / im.naturalHeight);
       const iw = im.naturalWidth * s, ih = im.naturalHeight * s;
-      ctx.drawImage(im, x + (w - iw) / 2, y + (h - ih) / 2, iw, ih);
+      ctx.drawImage(im, x + (w - iw) / 2, y + (h - ih) * ay, iw, ih);
     } else {
       ctx.fillStyle = '#e7f0fb';
       ctx.fillRect(x, y, w, h);
@@ -1362,14 +1479,13 @@ const PHOTOS = {
     ctx.fillText(String(rank), x + size / 2, y + size / 2 + 1);
   }
 
+  // 트위터 타임라인에서 잘리지 않는 4:5(1080×1350) 한 장. 역할 수에 맞춰 칸 수를 고름
   async function makeImage() {
     const rows = rankRows(state).map((r) => ({ rank: r.rank, item: items[pool[r.index]] }));
     const skipped = items.filter((_, i) => !pool.includes(i));
-    const top = rows.slice(0, Math.min(3, rows.length));
-    const rest = rows.slice(top.length);
+    const n = rows.length;
 
-    // 글꼴과 사진 준비
-    const allText = TITLE + FOOTER + '내 필모 순위 ' + rows.map((r) => r.item.raw).join('') + skipped.map((i) => i.raw).join('') + '♡★✦ RESULT.TXT MY FAVORITE ROLES 0123456789안 봐서 뺀 역할개:,';
+    const allText = TITLE + FOOTER + '내 필모 순위 역할개안 본 제외' + rows.map((r) => r.item.raw).join('') + '♡★ RESULT.TXT MY FAVORITE ROLES 0123456789·';
     try {
       await Promise.all([
         document.fonts.load(`800 40px "Noto Sans KR"`, allText),
@@ -1381,34 +1497,21 @@ const PHOTOS = {
     const angelEl = document.querySelector('.angel-head img');
     const [angel, ...photos] = await Promise.all([loadImg(angelEl ? angelEl.src : ''), ...rows.map((r) => loadImg(r.item.photo))]);
 
-    // 치수
-    const W = 1080, M = 56, winX = M, winW = W - M * 2, inX = winX + 44, inW = winW - 88;
-    const barH = 74, angelW = 300, angelH = angel ? angelW * angel.naturalHeight / angel.naturalWidth : 0;
-    const winY = angel ? Math.round(angelH * 0.72) + 24 : 56;
-    const cardGap = 26, cardW = (inW - cardGap * 2) / 3, cardPad = 14;
-    const cPhotoW = cardW - cardPad * 2, cPhotoH = cPhotoW * 4 / 3, cardH = cardPad + cPhotoH + 104;
-    const colGap = 30, colW = (inW - colGap) / 2, rowH = 122;
-    const leftCount = Math.ceil(rest.length / 2);
-    const headH = 44 + 52 + 84 + 52 + 40;               // 배지, 제목, 부제
-    const topH = top.length ? cardH + 40 : 0;
-    const restH = leftCount * rowH;
-    ctx0.font = `500 21px ${SANS}`;
-    const skipLines = skipped.length ? wrapLines(ctx0, `안 봐서 뺀 역할 ${skipped.length}개: ` + skipped.map((i) => i.raw).join(', '), inW) : [];
-    const skipH = skipLines.length ? 30 + skipLines.length * 32 : 0;
-    const winH = barH + headH + topH + restH + skipH + 48;
-    const H = winY + winH + 130;
+    const W = 1080, H = 1350;
+    const winX = 44, winW = W - 88, winY = 128, winH = H - 64 - winY;
+    const barH = 66, padX = 32, inX = winX + padX, inW = winW - padX * 2;
 
     const cv = document.createElement('canvas');
     cv.width = W; cv.height = H;
     const ctx = cv.getContext('2d');
 
-    // 바탕: 그라데이션 + 모눈
+    // 바탕
     const g = ctx.createLinearGradient(0, 0, 0, H);
-    [['0', '#c4ecf3'], ['.27', '#e5f4ff'], ['.53', '#dce6fc'], ['.77', '#fce3ed'], ['1', '#fff2d7']].forEach(([o, c]) => g.addColorStop(+o, c));
+    [[0, '#c4ecf3'], [.27, '#e5f4ff'], [.53, '#dce6fc'], [.77, '#fce3ed'], [1, '#fff2d7']].forEach(([o, c]) => g.addColorStop(o, c));
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     ctx.strokeStyle = 'rgba(202,159,193,.21)'; ctx.lineWidth = 2;
-    for (let x = 0; x <= W; x += 48) { ctx.beginPath(); ctx.moveTo(x + .5, 0); ctx.lineTo(x + .5, H); ctx.stroke(); }
-    for (let y = 0; y <= H; y += 48) { ctx.beginPath(); ctx.moveTo(0, y + .5); ctx.lineTo(W, y + .5); ctx.stroke(); }
+    for (let x = 0; x <= W; x += 45) { ctx.beginPath(); ctx.moveTo(x + .5, 0); ctx.lineTo(x + .5, H); ctx.stroke(); }
+    for (let y = 0; y <= H; y += 45) { ctx.beginPath(); ctx.moveTo(0, y + .5); ctx.lineTo(W, y + .5); ctx.stroke(); }
 
     // 창
     rr(ctx, winX + 8, winY + 10, winW, winH, 30); ctx.fillStyle = IMGC.winShade; ctx.fill();
@@ -1419,77 +1522,140 @@ const PHOTOS = {
     ctx.lineWidth = 3.5; ctx.strokeStyle = IMGC.line;
     ctx.beginPath(); ctx.moveTo(winX, winY + barH); ctx.lineTo(winX + winW, winY + barH); ctx.stroke();
     rr(ctx, winX, winY, winW, winH, 30); ctx.stroke();
-    ctx.fillStyle = IMGC.barText; ctx.font = `600 30px ${PIXEL}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-    ctx.fillText('♡ RESULT.TXT', winX + 28, winY + barH / 2 + 1);
+    ctx.fillStyle = IMGC.barText; ctx.font = `600 28px ${PIXEL}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('♡ RESULT.TXT', winX + 26, winY + barH / 2 + 1);
     IMGC.dots.forEach((c, i) => {
-      ctx.beginPath(); ctx.arc(winX + winW - 34 - (2 - i) * 34, winY + barH / 2, 11, 0, Math.PI * 2);
+      ctx.beginPath(); ctx.arc(winX + winW - 32 - (2 - i) * 32, winY + barH / 2, 10, 0, Math.PI * 2);
       ctx.fillStyle = c; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = IMGC.dotBorder; ctx.stroke();
     });
 
     // 머리글
-    let y = winY + barH + 44;
-    ctx.font = `600 22px ${PIXEL}`;
-    const eb = '★  MY FAVORITE ROLES  ★', ebW = ctx.measureText(eb).width + 44;
-    rr(ctx, W / 2 - ebW / 2, y, ebW, 46, 23); ctx.fillStyle = '#f6edff'; ctx.fill();
+    let y = winY + barH + 22;
+    ctx.font = `600 18px ${PIXEL}`;
+    const eb = '★  MY FAVORITE ROLES  ★', ebW = ctx.measureText(eb).width + 40;
+    rr(ctx, W / 2 - ebW / 2, y, ebW, 34, 17); ctx.fillStyle = '#f6edff'; ctx.fill();
     ctx.lineWidth = 2; ctx.strokeStyle = '#e9d9f1'; ctx.stroke();
-    ctx.fillStyle = '#a783b6'; ctx.textAlign = 'center'; ctx.fillText(eb, W / 2, y + 24);
-    y += 46 + 52;
-    fitFont(ctx, TITLE, 800, 58, SANS, inW);
+    ctx.fillStyle = '#a783b6'; ctx.textAlign = 'center'; ctx.fillText(eb, W / 2, y + 18);
+    y += 34 + 36;
+    fitFont(ctx, TITLE, 800, 46, SANS, inW);
     ctx.fillStyle = IMGC.title; ctx.fillText(TITLE, W / 2, y);
-    y += 62;
-    ctx.font = `700 30px ${SANS}`; ctx.fillStyle = IMGC.sub;
-    ctx.fillText(`내 필모 순위 · 역할 ${rows.length}개`, W / 2, y);
-    y += 22 + 40;
+    y += 40;
+    ctx.font = `700 24px ${SANS}`; ctx.fillStyle = IMGC.sub;
+    const subLine = `내 필모 순위 · 역할 ${n}개` + (skipped.length ? ` (안 본 ${skipped.length}개 제외)` : '');
+    fitFont(ctx, subLine, 700, 24, SANS, inW);
+    ctx.fillText(subLine, W / 2, y);
+    y += 30;
 
-    // 1~3위 카드
-    top.forEach((r, i) => {
-      const x = inX + i * (cardW + cardGap);
-      rr(ctx, x + 5, y + 6, cardW, cardH, 24); ctx.fillStyle = IMGC.shade; ctx.fill();
-      rr(ctx, x, y, cardW, cardH, 24); ctx.fillStyle = '#fff'; ctx.fill();
-      ctx.lineWidth = 3; ctx.strokeStyle = IMGC.cardBorder; ctx.stroke();
-      drawCover(ctx, photos[i], x + cardPad, y + cardPad, cPhotoW, cPhotoH, 16);
-      rr(ctx, x + cardPad, y + cardPad, cPhotoW, cPhotoH, 16); ctx.lineWidth = 2; ctx.strokeStyle = IMGC.photoBorder; ctx.stroke();
-      rankBadge(ctx, x + cardPad + 12, y + cardPad + 12, 58, r.rank, IMGC.rankFill[Math.min(r.rank, 3) - 1] || '#fff');
-      const ny = y + cardPad + cPhotoH + 40;
-      fitFont(ctx, r.item.role, 800, 31, SANS, cardW - 24);
-      ctx.fillStyle = '#577da5'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(r.item.role, x + cardW / 2, ny);
-      drawWork(ctx, r.item, x + cardW / 2, ny + 40, cardW - 24, 21, 'center');
-    });
-    if (top.length) y += cardH + 40;
-
-    // 나머지: 두 줄
-    rest.forEach((r, k) => {
-      const col = k < leftCount ? 0 : 1, row = col ? k - leftCount : k;
-      const x = inX + col * (colW + colGap), ry = y + row * rowH;
-      const thumbW = 72, thumbH = 96, ty = ry + (rowH - thumbH) / 2;
-      ctx.fillStyle = IMGC.rankText; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.font = `600 30px ${PIXEL}`;
-      ctx.fillText(String(r.rank), x + 26, ry + rowH / 2 + 1);
-      drawCover(ctx, photos[top.length + k], x + 60, ty, thumbW, thumbH, 12);
-      rr(ctx, x + 60, ty, thumbW, thumbH, 12); ctx.lineWidth = 2; ctx.strokeStyle = IMGC.photoBorder; ctx.stroke();
-      const tx = x + 60 + thumbW + 20, tw = colW - (60 + thumbW + 20);
-      fitFont(ctx, r.item.role, 700, 28, SANS, tw);
-      ctx.fillStyle = IMGC.name; ctx.textAlign = 'left';
-      ctx.fillText(r.item.role, tx, ry + rowH / 2 - 17);
-      drawWork(ctx, r.item, tx, ry + rowH / 2 + 21, tw, 20, 'left');
-      if (row < (col ? rest.length - leftCount : leftCount) - 1) {
-        ctx.setLineDash([6, 6]); ctx.strokeStyle = IMGC.dash; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(x, ry + rowH); ctx.lineTo(x + colW, ry + rowH); ctx.stroke(); ctx.setLineDash([]);
+    // 1~3위는 큰 카드(가운데 1위가 가장 큼), 나머지는 아래 작은 칸
+    const gridTop = y + 28, gridBottom = winY + winH - 24, availH = gridBottom - gridTop;   // +28: 1위 왕관 자리
+    let top = rows.filter((r) => r.rank <= 3);
+    if (top.length > 5) top = top.slice(0, 5);
+    if (!top.length) top = rows.slice(0, Math.min(3, n));
+    const rest = rows.slice(top.length);
+    const podium = top.length === 3 && top[0].rank === 1 && top[1].rank === 2 && top[2].rank === 3;
+    const slots = podium ? [1, 0, 2] : top.map((_, i) => i);      // 그리는 순서(왼→오)
+    const T = { gap: 22, pad: 10, ratio: 1.15, name: 32, work: 21 };
+    const textH = T.name * 1.45 + T.work * 1.5 + 10;
+    function topLayout(H) {
+      let h = H, res = null;
+      for (let t = 0; t < 6; t++) {
+        const cards = slots.map((idx) => {
+          const ch = podium && top[idx].rank !== 1 ? h * 0.88 : h;
+          const ph = Math.max(60, ch - T.pad * 2 - textH), pw = ph / T.ratio;
+          return { idx, ch, ph, pw, cw: pw + T.pad * 2 };
+        });
+        const totalW = cards.reduce((m, c) => m + c.cw, 0) + (cards.length - 1) * T.gap;
+        const maxW = Math.min(inW, cards.length * 300 + (cards.length - 1) * T.gap);
+        res = { cards, totalW, H: h };
+        if (totalW <= maxW + 0.5) return res;
+        h = T.pad * 2 + textH + (h - T.pad * 2 - textH) * (maxW / totalW) - 1;
       }
-    });
-    y += restH;
+      return res;
+    }
+    // 4위부터는 이름 목록 (열 수는 개수에 맞춤, 위→아래로 읽음)
+    function restLayout() {
+      const c = rest.length <= 4 ? 1 : rest.length <= 10 ? 2 : 3;
+      const colGap = 26, rowH = c === 1 ? 68 : c === 2 ? 62 : 57;
+      const r = Math.ceil(rest.length / c);
+      const cw = c === 1 ? Math.min(inW, 520) : (inW - colGap * (c - 1)) / c;
+      return { c, r, cw, colGap, rowH, gh: r * rowH + 28, nameSz: c === 3 ? 22 : 24, workSz: c === 3 ? 16 : 17 };   // +28: 메모지 여백
+    }
+    const secGap = 30;
+    let TL, L = null;
+    if (!rest.length) {
+      TL = topLayout(Math.min(availH, 600));
+    } else {
+      L = restLayout();
+      TL = topLayout(Math.min(availH - secGap - L.gh, availH * 0.66, 600));
+    }
+    const blockH = TL.H + (L ? secGap + L.gh : 0);
+    const by = gridTop + Math.max(0, (availH - blockH) / 2);
 
-    if (skipLines.length) {
-      y += 30;
-      ctx.font = `500 21px ${SANS}`; ctx.fillStyle = IMGC.muted; ctx.textAlign = 'center';
-      skipLines.forEach((ln, i) => ctx.fillText(ln, W / 2, y + i * 32 + 10));
+    // 큰 카드
+    let cx0 = inX + (inW - TL.totalW) / 2;
+    TL.cards.forEach((c) => {
+      const row = top[c.idx], x = cx0, ty = by + (TL.H - c.ch);
+      cx0 += c.cw + T.gap;
+      const first = row.rank === 1;
+      rr(ctx, x + 5, ty + 6, c.cw, c.ch, 20); ctx.fillStyle = '#f3c6dc'; ctx.fill();
+      rr(ctx, x, ty, c.cw, c.ch, 20); ctx.fillStyle = first ? '#fff7fb' : '#fff'; ctx.fill();
+      ctx.lineWidth = first ? 4.5 : 3.5; ctx.strokeStyle = '#d998b6'; ctx.stroke();
+      const px = x + T.pad, py = ty + T.pad;
+      drawCover(ctx, photos[c.idx], px, py, c.pw, c.ph, 14, 0.3);
+      rr(ctx, px, py, c.pw, c.ph, 14); ctx.lineWidth = 2; ctx.strokeStyle = IMGC.photoBorder; ctx.stroke();
+      const bs = first ? 60 : 52;
+      rankBadge(ctx, px + 9, py + 9, bs, row.rank, IMGC.rankFill[Math.min(row.rank, 3) - 1]);
+      if (first) {   // 1위 왕관
+        const kx = x + c.cw / 2, ky = ty - 2, kw = 46, kh = 30;
+        ctx.beginPath();
+        ctx.moveTo(kx - kw / 2, ky); ctx.lineTo(kx - kw / 2 - 3, ky - kh); ctx.lineTo(kx - kw / 4, ky - kh * 0.45);
+        ctx.lineTo(kx, ky - kh - 6); ctx.lineTo(kx + kw / 4, ky - kh * 0.45); ctx.lineTo(kx + kw / 2 + 3, ky - kh);
+        ctx.lineTo(kx + kw / 2, ky); ctx.closePath();
+        ctx.fillStyle = '#ffe48a'; ctx.fill(); ctx.lineJoin = 'round'; ctx.lineWidth = 3; ctx.strokeStyle = '#c99ab6'; ctx.stroke();
+        [[-kw / 2 - 3, -kh], [0, -kh - 6], [kw / 2 + 3, -kh]].forEach(([dx, dy]) => {
+          ctx.beginPath(); ctx.arc(kx + dx, ky + dy, 4.5, 0, Math.PI * 2); ctx.fillStyle = '#ffb3cf'; ctx.fill(); ctx.lineWidth = 2; ctx.stroke();
+        });
+      }
+      const ny = py + c.ph + T.name * 0.95;
+      fitFont(ctx, row.item.role, 800, first ? T.name + 2 : T.name, SANS, c.cw - 16);
+      ctx.fillStyle = '#577da5'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(row.item.role, x + c.cw / 2, ny);
+      drawWork(ctx, row.item, x + c.cw / 2, ny + T.name * 0.78 + T.work * 0.8, c.cw - 16, T.work, 'center');
+    });
+
+    // 이름 목록
+    if (L) {
+      const y0 = by + TL.H + secGap + 14;
+      const listW = L.c * L.cw + (L.c - 1) * L.colGap;
+      const lx = inX + (inW - listW) / 2;
+      // 목록 바탕 (메모지)
+      rr(ctx, lx - 18, y0 - 14, listW + 36, L.gh, 18); ctx.fillStyle = '#f8f6ff'; ctx.fill();
+      ctx.lineWidth = 2; ctx.strokeStyle = '#e4dcf3'; ctx.stroke();
+      rest.forEach((row, i) => {
+        const col = Math.floor(i / L.r), k = i % L.r;
+        const x = lx + col * (L.cw + L.colGap), ry = y0 + k * L.rowH, mid = ry + L.rowH / 2;
+        if (k < Math.min(L.r, rest.length - col * L.r) - 1) {
+          ctx.setLineDash([5, 6]); ctx.strokeStyle = '#d8d7e7'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(x, ry + L.rowH); ctx.lineTo(x + L.cw, ry + L.rowH); ctx.stroke(); ctx.setLineDash([]);
+        }
+        ctx.fillStyle = IMGC.rankText; ctx.font = `600 ${L.nameSz}px ${PIXEL}`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(String(row.rank), x + 22, mid + 1);
+        const tx = x + 52, tw = L.cw - 56;
+        fitFont(ctx, row.item.role, 800, L.nameSz, SANS, tw);
+        ctx.fillStyle = '#577da5'; ctx.textAlign = 'left';
+        ctx.fillText(row.item.role, tx, mid - L.nameSz * 0.5);
+        drawWork(ctx, row.item, tx, mid + L.workSz * 0.85, tw, L.workSz, 'left');
+      });
     }
 
     // 고양이 + 꼬리말
-    if (angel) ctx.drawImage(angel, winX + winW - angelW - 150, winY - angelH * 0.72, angelW, angelH);
-    ctx.font = `500 26px ${SANS}`; ctx.fillStyle = '#8b97ae'; ctx.textAlign = 'center';
-    ctx.fillText(FOOTER + ' ♡', W / 2, winY + winH + 66);
+    if (angel) {
+      const aw = 204, ah = aw * angel.naturalHeight / angel.naturalWidth;
+      ctx.drawImage(angel, winX + winW - aw - 140, winY - ah * 0.72, aw, ah);
+    }
+    ctx.font = `500 23px ${SANS}`; ctx.fillStyle = '#8b97ae'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(FOOTER, W / 2, H - 30);
 
     return new Promise((resolve) => cv.toBlob(resolve, 'image/png'));
   }
