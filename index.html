@@ -854,6 +854,28 @@ body[data-phase="result"] .result .perch { margin-top: 0; }
   .app { padding-top: calc(118px + env(safe-area-inset-top)); }
 }
 
+/* VS: 홍보 이미지와 같은 동그란 배지 */
+.vs {
+  top: 44%; width: 46px; height: 46px;
+  display: grid; place-items: center;
+  border-radius: 50%; background: #ffffff; border: 2.5px solid #86a7ce;
+  box-shadow: 3px 3px 0 #c6d6ee;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  font: 700 17px/1 var(--font-pixel); color: #6487b3; letter-spacing: .02em;
+}
+
+/* 그림자: 연분홍 → 연보라 */
+:root { --shade: #dcd2f4; }
+.win { box-shadow: 5px 6px 0 #dcd2f4, 0 15px 29px rgba(117,142,181,.08); }
+.pick { box-shadow: 2px 3px 0 #dcd2f4; }
+.pod { box-shadow: 3px 4px 0 #dcd2f4; }
+.podium.is-podium .pod.first { box-shadow: 4px 5px 0 #dcd2f4; }
+.foot.win { box-shadow: 3px 4px 0 #dcd2f4; }
+.toast { box-shadow: 3px 3px 0 #dcd2f4; }
+.btn.primary { box-shadow: 3px 4px 0 #dcd2f4; }
+.start-row .btn { box-shadow: 0 6px 16px rgba(140,120,190,.18), 3px 4px 0 #dcd2f4; }
+.vs { box-shadow: 3px 3px 0 #dcd2f4; }
+
 </style>
 </head>
 
@@ -913,9 +935,7 @@ body[data-phase="result"] .result .perch { margin-top: 0; }
   <section class="arena" id="arena" hidden>
     <div class="duel">
       <button type="button" class="card win t-pink" id="left"></button>
-      <span class="vs" aria-hidden="true">
-        <svg viewBox="0 0 54 54"><path d="M27 3 33.6 18.4 50 19.8 37.6 30.8 41.3 47 27 38.5 12.7 47 16.4 30.8 4 19.8 20.4 18.4Z" fill="#fff0bd" stroke="#8b68a6" stroke-width="2.5" stroke-linejoin="round"/><text x="27" y="33" text-anchor="middle">VS</text></svg>
-      </span>
+      <span class="vs" aria-hidden="true">VS</span>
       <button type="button" class="card win t-sky" id="right"></button>
     </div>
     <div class="ties">
@@ -1420,7 +1440,7 @@ const PHOTOS = {
   const IMGC = {
     line: '#86a7ce', title: '#557ca5', sub: '#7a90ad', name: '#587da4', work: '#8e9db4', muted: '#8da1b7',
     rankText: '#7895b5', rankBorder: '#c5a4c6', rankFill: ['#ffe1ea', '#fff0c7', '#dbf4ed'],
-    cardBorder: '#b9cee7', photoBorder: '#b7cee7', shade: '#e6ddf3', winShade: 'rgba(228,176,205,.57)',
+    cardBorder: '#b9cee7', photoBorder: '#b7cee7', shade: '#e4dcf6', winShade: '#dcd2f4',
     bar: '#ffd6e8', barText: '#6487b3', dots: ['#ffedaa', '#b6f5a8', '#ffbbd9'], dotBorder: '#bd7caa',
     yearBorder: '#e2c5d6', yearFill: '#fff2d0', yearText: '#9b7999', dash: '#d8d7e7',
   };
